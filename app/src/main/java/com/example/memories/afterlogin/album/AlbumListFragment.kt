@@ -1,5 +1,6 @@
 package com.example.memories.afterlogin.album
 
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -18,6 +19,7 @@ class AlbumListFragment : BaseFragment(), IAlbumList.IAlbumListView, AlbumAdapte
     lateinit var binding: FragmentAlbumsBinding
     lateinit var presenter: AlbumListPresenter
     lateinit var adapter: AlbumAdapter
+    lateinit var viewModel: AlbumListViewModel
     var albums = ArrayList<Album>()
 
     companion object {
@@ -26,6 +28,12 @@ class AlbumListFragment : BaseFragment(), IAlbumList.IAlbumListView, AlbumAdapte
             return fragment
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel=ViewModelProviders.of(this).get(AlbumListViewModel::class.java)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, com.example.memories.R.layout.fragment_albums, container, false)
