@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/profileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary" />
+
+    <FrameLayout
+        android:layout_below="@id/profileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".afterlogin.profile.ProfileFragment">
+
+            <!-- TODO: Update blank fragment layout -->
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="207dp"
+                android:layout_height="183dp"
+                android:layout_marginTop="84dp"
+                android:src="@drawable/blank_profile"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="226dp"
+                android:layout_height="89dp"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.475"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_image"
+                tools:text="Name" />
+
+
+            <Button
+                android:id="@+id/logoutbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="44dp"
+                android:layout_marginBottom="44dp"
+                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+                android:text="Logout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/profileProgress"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center" />
+
+    </FrameLayout>
+    </RelativeLayout>
+</layout>

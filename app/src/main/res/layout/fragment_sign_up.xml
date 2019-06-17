@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/signUpToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/signUpToolbar"
+            android:orientation="vertical"
+            tools:context=".login.SignUpFragment">
+
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/loginConstraint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/userFormIV"
+                    android:layout_width="182dp"
+                    android:layout_height="181dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/blank_profile"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <EditText
+                    android:id="@+id/userNameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="24dp"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userFormIV" />
+
+
+                <EditText
+                    android:id="@+id/userSignET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginEnd="32dp"
+                    android:hint="Username"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userNameET" />
+
+                <EditText
+                    android:id="@+id/passSignET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userSignET" />
+
+                <Button
+                    android:id="@+id/btn_signUp"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_marginStart="72dp"
+                    android:layout_marginTop="72dp"
+                    android:layout_marginEnd="72dp"
+                    android:text="Sign Up"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.495"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/passSignET" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </RelativeLayout>
+</layout>
