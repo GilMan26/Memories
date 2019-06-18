@@ -198,6 +198,7 @@ object DataManager {
 
     interface ILoadAlbumCallback {
 
+
         fun onSuccess(albums: ArrayList<Album>)
 
         fun onFailure(ack: String)

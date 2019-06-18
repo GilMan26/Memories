@@ -1,5 +1,6 @@
 package com.example.memories.afterlogin.album
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -17,7 +18,6 @@ import com.example.memories.databinding.FragmentAlbumsBinding
 class AlbumListFragment : BaseFragment(), IAlbumList.IAlbumListView, AlbumAdapter.IAlbumClickHandler {
 
     lateinit var binding: FragmentAlbumsBinding
-    lateinit var presenter: AlbumListPresenter
     lateinit var adapter: AlbumAdapter
     lateinit var viewModel: AlbumListViewModel
     var albums = ArrayList<Album>()
@@ -36,32 +36,32 @@ class AlbumListFragment : BaseFragment(), IAlbumList.IAlbumListView, AlbumAdapte
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, com.example.memories.R.layout.fragment_albums, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_albums, container, false)
+        viewModel.loadAlbums()
+        showProgress()
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.getAlbums()
-    }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.albumsToolbar.title = "Albums"
-        presenter = AlbumListPresenter(this)
         adapter = AlbumAdapter(albums, this)
-        presenter.getAlbums()
         binding.addFab.setOnClickListener {
             fragmentTransactionHandler.pushFullFragment(AddAlbumFragment.getInstance())
         }
-//        binding.albumsToolbar.setLogo(R.drawable.ic_launcher_foreground)
 
         binding.refreshAlbum.setOnRefreshListener {
-            presenter.getAlbums()
+            viewModel.loadAlbums()
         }
         binding.categoryRecycler.adapter = adapter
         binding.categoryRecycler.layoutManager = GridLayoutManager(context, 2)
+        viewModel.albums.observe(this, Observer {
+            albums= viewModel.albums.value!!
+            loadAlbums(albums)
+            hideProgress()
+        })
     }
 
 

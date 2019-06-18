@@ -8,7 +8,6 @@ interface IAddAlbum {
 
     interface IAddAlbumView : IBaseView{
 
-        fun requestAlbum(album: Album)
 
         fun showValidatiton(message: String)
 
