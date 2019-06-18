@@ -1,5 +1,7 @@
 package com.example.memories.afterlogin.timeline
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -16,7 +18,8 @@ class TimelineFragment : BaseFragment(), ITimelineContract.ITimelineView, TImeli
 
     lateinit var binding: FragmentTimelineBinding
     lateinit var adapter: TImelineAdapter
-    lateinit var presenter: TimelinePresenter
+    lateinit var viewModel:TimelineViewModel
+//    lateinit var presenter: TimelinePresenter
     var list = ArrayList<Photo>()
 
     companion object {
@@ -32,13 +35,20 @@ class TimelineFragment : BaseFragment(), ITimelineContract.ITimelineView, TImeli
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timeline, container, false)
+        viewModel=ViewModelProviders.of(this).get(TimelineViewModel::class.java)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        presenter = TimelinePresenter(this)
-        presenter.loadImages()
+//        presenter = TimelinePresenter(this)
+//        presenter.loadImages()
+        showProgress()
+        viewModel.getTimeline()
+        viewModel.timeline.observe(this, Observer {
+            list=viewModel.timeline.value!!
+            populateList(list)
+        })
         binding.timelineToolbar.title="Timeline"
 //        binding.timelineToolbar.setLogo(R.drawable.ic_launcher_foreground)
 
@@ -46,7 +56,7 @@ class TimelineFragment : BaseFragment(), ITimelineContract.ITimelineView, TImeli
         binding.timelineRV.adapter = adapter
         binding.timelineRV.layoutManager = LinearLayoutManager(context)
         binding.refreshTimeline.setOnRefreshListener {
-            presenter.loadImages()
+            viewModel.getTimeline()
         }
 
     }
@@ -64,6 +74,7 @@ class TimelineFragment : BaseFragment(), ITimelineContract.ITimelineView, TImeli
             binding.timelineTV.visibility=View.VISIBLE
         adapter.addList(list)
         binding.refreshTimeline.setRefreshing(false)
+        hideProgress()
     }
 
     override fun imageClick(url: String) {

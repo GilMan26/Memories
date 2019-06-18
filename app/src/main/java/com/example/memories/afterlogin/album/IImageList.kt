@@ -15,11 +15,4 @@ interface IImageList {
 
     }
 
-
-    interface IImageListPresenter {
-
-        fun getImages(ref: String)
-
-    }
-
 }

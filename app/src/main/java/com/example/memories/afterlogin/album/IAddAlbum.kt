@@ -1,7 +1,6 @@
 package com.example.memories.afterlogin.album
 
 import com.example.memories.IBaseView
-import com.example.memories.repository.Album
 
 interface IAddAlbum {
 
@@ -19,10 +18,4 @@ interface IAddAlbum {
 
     }
 
-
-    interface IAddAlbumPresenter {
-
-        fun validateAlbum(title: String, message: String)
-
-    }
 }

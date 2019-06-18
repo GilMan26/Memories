@@ -13,12 +13,4 @@ interface IAlbumList {
 
     }
 
-    interface IAlbumListPresenter {
-
-        fun getAlbums()
-
-        fun getImages()
-
-
-    }
 }

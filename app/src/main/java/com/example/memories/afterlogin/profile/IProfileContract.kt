@@ -14,7 +14,6 @@ interface IProfileContract {
 
         fun changeProfile()
 
-//        fun showImage()
 
 
 

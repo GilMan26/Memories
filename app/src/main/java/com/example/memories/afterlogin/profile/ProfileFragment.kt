@@ -1,10 +1,9 @@
 package com.example.memories.afterlogin.profile
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,15 +12,18 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.memories.BaseFragment
 import com.example.memories.R
-import com.example.memories.afterlogin.album.ImageFragment
 import com.example.memories.databinding.FragmentProfileBinding
 import com.example.memories.login.LoginActivity
-import com.example.memories.repository.LoginHelper
+import com.example.memories.repository.User
 
 class ProfileFragment: BaseFragment(), IProfileContract.IProfileView{
+
     lateinit var binding:FragmentProfileBinding
-    lateinit var presenter: ProfilePresenter
+//    lateinit var presenter: ProfilePresenter
+    var user= User()
     lateinit var iTerminator: ITerminator
+    lateinit var viewModel:ProfileViewModel
+
     companion object{
         private var BUNDLE_ARG="key"
 
@@ -37,24 +39,29 @@ class ProfileFragment: BaseFragment(), IProfileContract.IProfileView{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding=DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
+        viewModel=ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        presenter= ProfilePresenter(this)
-        presenter.getDetials()
+        showProgress()
+        viewModel.getUser()
+        viewModel.currentUser.observe(this, Observer {
+            user=viewModel.currentUser.value!!
+            inflateData(user.name, user.url)
+        })
         binding.profileToolbar.title="Profile"
 //        binding.profileToolbar.setLogo(R.drawable.ic_launcher_foreground)
         binding.logoutbtn.setOnClickListener{
-            presenter.logout()
+            viewModel.logout()
         }
         binding.profileImage.setOnClickListener{
-            presenter.onClick()
+            viewModel.onClick()
         }
 
         binding.profileImage.setOnLongClickListener{
-            presenter.changeProfile()
+            viewModel.changeProfile()
             return@setOnLongClickListener true
         }
     }
@@ -86,6 +93,7 @@ class ProfileFragment: BaseFragment(), IProfileContract.IProfileView{
                     .load(url)
                     .into(binding.profileImage)
         }
+        hideProgress()
     }
 
     override fun logout() {
