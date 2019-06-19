@@ -2,6 +2,8 @@ package com.example.memories.afterlogin.album
 
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
@@ -23,9 +25,9 @@ import com.example.memories.databinding.FragmentAddImageBinding
 class AddImageFragment : BaseFragment(), IAddImage.IAddImageView {
 
 
-    lateinit var presenter: AddImagePresenter
     lateinit var bitmap: Bitmap
     lateinit var albumRef: String
+    lateinit var viewModel: AddImageViewModel
     lateinit var binding: FragmentAddImageBinding
 
     companion object {
@@ -44,6 +46,7 @@ class AddImageFragment : BaseFragment(), IAddImage.IAddImageView {
                               savedInstanceState: Bundle?): View? {
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_image, container, false)
+        viewModel=ViewModelProviders.of(this).get(AddImageViewModel::class.java)
         if (arguments != null) {
             albumRef = arguments!!.getString(ALBUM_REF)
         }
@@ -56,9 +59,15 @@ class AddImageFragment : BaseFragment(), IAddImage.IAddImageView {
         binding.addImageToolbar.setNavigationOnClickListener{
             fragmentManager?.popBackStackImmediate()
         }
-        presenter = AddImagePresenter(this)
+        viewModel.state.observe(this, Observer {
+            if(viewModel.state.value==true){
+                hideProgress()
+                uploadSuccess()
+            }
+        })
         binding.addImage.setOnClickListener {
-            presenter.validate(binding.imageName.text.toString(),binding.imageMessage.text.toString(),  bitmap, albumRef)
+            showProgress()
+            validate()
         }
 
         binding.imageView.setOnClickListener {
@@ -104,6 +113,17 @@ class AddImageFragment : BaseFragment(), IAddImage.IAddImageView {
             } else {
 
             }
+        }
+    }
+
+    fun validate(){
+        if(binding.imageView==null){
+            Toast.makeText(context, "Please Select and Image", Toast.LENGTH_LONG).show()
+        }else if(binding.imageName.text.isEmpty()){
+            Toast.makeText(context, "Enter a name for the image", Toast.LENGTH_LONG).show()
+        }else{
+            viewModel.addImage(binding.imageName.text.toString(), binding.imageMessage.text.toString(), bitmap, albumRef)
+
         }
     }
 

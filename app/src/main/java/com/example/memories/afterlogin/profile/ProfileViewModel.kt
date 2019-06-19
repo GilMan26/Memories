@@ -28,7 +28,7 @@ class ProfileViewModel: ViewModel() {
     fun logout(){
         LoginHelper.signOut(object : LoginHelper.SignOutListener{
             override fun onSignout() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                currentUser.value=null
             }
         })
     }

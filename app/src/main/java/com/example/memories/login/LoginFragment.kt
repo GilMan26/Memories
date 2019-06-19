@@ -1,9 +1,13 @@
 package com.example.memories.login
 
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +17,7 @@ import com.example.memories.BaseFragment
 import com.example.memories.R
 import com.example.memories.afterlogin.MainActivity
 import com.example.memories.databinding.FragmentLoginBinding
+import com.example.memories.repository.LoginHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseUser
@@ -22,6 +27,7 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
 
     val REQUEST_CODE_GOOGLE = 101
     lateinit var iLoginSuccess: SignUpFragment.IOnLoginSuccess
+    lateinit var viewModel: LoginViewModel
 
 
     companion object {
@@ -33,12 +39,12 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
 
     }
 
-    lateinit var loginPresenter: LoginPresenter
     lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
+        viewModel=ViewModelProviders.of(this).get(LoginViewModel::class.java)
         return binding.root
     }
 
@@ -49,9 +55,8 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.loginToolbar.title = "Login"
-        loginPresenter = LoginPresenter(this)
         binding.btnLogin.setOnClickListener {
-            loginPresenter.requestLogin(binding.userLoginET.text.toString(), binding.passLoginET.text.toString())
+            requestLogin(binding.userLoginET.text.toString(), binding.passLoginET.text.toString())
         }
         binding.googleSignButton.setOnClickListener {
             googleLogin()
@@ -59,6 +64,9 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
         binding.textSignup.setOnClickListener {
             fragmentTransactionHandler.pushFragment(SignUpFragment.getInstance())
         }
+        viewModel.currentUser.observe(this, Observer {
+            loginSuccessful(viewModel.currentUser.value!!)
+        })
     }
 
 
@@ -100,7 +108,7 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
                 val account = task.getResult(ApiException::class.java)
 
                 if (account != null) {
-                    loginPresenter.requestGoogleLogin(account)
+                    viewModel.googleLogin(account)
                 }
             } catch (e: ApiException) {
                 Log.w("signin", "Google sign in failed", e)
@@ -108,5 +116,22 @@ class LoginFragment : BaseFragment(), ILoginContract.ILoginView {
         }
     }
 
+    fun requestLogin(username: String, password: String) {
+        if (TextUtils.isEmpty(username)) {
+            showValidationError("User name cannot be empty")
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+            showValidationError("Invalid Username")
+        } else if (TextUtils.isEmpty(password)) {
+            showValidationError("Password cannot be empty")
+        } else if (password.length < 6) {
+            showValidationError("Password length too short")
+        } else {
+            showProgress()
+            viewModel.loginUser(username, password)
 
+        }
+    }
 }
+
+
+
